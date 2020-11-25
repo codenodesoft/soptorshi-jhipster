@@ -35,7 +35,7 @@ public class RequisitionExtendedService extends RequisitionService {
         requisitionDTO.setOfficeId(employee.getOffice().getId());
         requisitionDTO.setEmployeeId(employee.getId());
         requisitionDTO = super.save(requisitionDTO);
-        if(requisitionDTO.getStatus().equals(RequisitionStatus.RECEIVED_BY_REQUISIONER))
+        if(requisitionDTO.getStatus().equals(RequisitionStatus.RECEIVED_VERIFIED_BY_HEAD))
             requisitionVoucherTransactionService.createPaymentVoucher(requisitionDTO);
         return requisitionDTO;
     }

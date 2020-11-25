@@ -13,6 +13,7 @@ import org.soptorshi.service.dto.RequisitionDTO;
 import org.soptorshi.service.extended.PaymentVoucherExtendedService;
 import org.soptorshi.service.mapper.DtTransactionMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RequisitionVoucherTransactionService {
     private final RequisitionExtendedRepository requisitionExtendedRepository;
     private final RequisitionVoucherRelationExtendedRepository requisitionVoucherRelationExtendedRepository;
@@ -47,12 +49,14 @@ public class RequisitionVoucherTransactionService {
 
     public void createPaymentVoucher(RequisitionDTO requisitionDTO) {
 
-        BigDecimal alreadyPaidAmount = purchaseOrderVoucherRelationExtendedRepository.findByPurchaseOrder_Requisition_Id(requisitionDTO.getId())
-            .stream()
-            .filter(v-> v.getVoucherNo().contains("BP")) // fetching already paid vouchers so that it can be excluded
-            .map(v-> v.getAmount())
-            .reduce(BigDecimal::add)
-            .get();
+        BigDecimal alreadyPaidAmount = BigDecimal.ZERO;
+        List<PurchaseOrderVoucherRelation> purchaseOrderVoucherRelations = purchaseOrderVoucherRelationExtendedRepository.findByPurchaseOrder_Requisition_Id(requisitionDTO.getId());
+
+        for(PurchaseOrderVoucherRelation purchaseOrderVoucherRelation: purchaseOrderVoucherRelations){
+            if(purchaseOrderVoucherRelation.getVoucherNo().contains("BP")){
+                alreadyPaidAmount.add(purchaseOrderVoucherRelation.getAmount());
+            }
+        }
 
         PaymentVoucherDTO paymentVoucherDTO = generatePaymentVoucher(requisitionDTO);
         createTransactions(requisitionDTO, paymentVoucherDTO, alreadyPaidAmount);
@@ -62,7 +66,7 @@ public class RequisitionVoucherTransactionService {
 
     private PaymentVoucherDTO generatePaymentVoucher(RequisitionDTO requisitionDTO){
         PaymentVoucherDTO paymentVoucherDTO = new PaymentVoucherDTO();
-        paymentVoucherDTO.setAccountId(systemAccountMapExtendedRepository.findByAccountType(AccountType.SALARY_PAYABLE).getAccount().getId());
+        paymentVoucherDTO.setAccountId(systemAccountMapExtendedRepository.findByAccountType(AccountType.SALARY_ACCOUNT).getAccount().getId());
         paymentVoucherDTO.setVoucherDate(LocalDate.now());
         paymentVoucherDTO.setApplicationId(purchaseOrderRepository.findByRequisition_Id(requisitionDTO.getId()).getId());
         paymentVoucherDTO.setApplicationType(ApplicationType.PURCHASE_ORDER);
@@ -77,10 +81,9 @@ public class RequisitionVoucherTransactionService {
         DtTransactionDTO creditTransaction = new DtTransactionDTO();
         creditTransaction.setVoucherNo(paymentVoucherDTO.getVoucherNo());
         creditTransaction.setVoucherDate(paymentVoucherDTO.getVoucherDate());
-        creditTransaction.setVoucherId(paymentVoucherDTO.getId());
         creditTransaction.setBalanceType(BalanceType.CREDIT);
         creditTransaction.setAmount(requisitionDTO.getAmount().subtract(alreadyPaidAmount));
-        creditTransaction.setAccountId(systemAccountMapExtendedRepository.findByAccountType(AccountType.SALARY_PAYABLE).getAccount().getId());
+        creditTransaction.setAccountId(systemAccountMapExtendedRepository.findByAccountType(AccountType.SALARY_ACCOUNT).getAccount().getId());
         creditTransaction.setConvFactor(BigDecimal.ONE);
         creditTransaction.setCurrencyId(activeCurrency.getId());
         creditTransaction.setCurrencyNotation("BDT");
@@ -90,7 +93,6 @@ public class RequisitionVoucherTransactionService {
 
         DtTransactionDTO debitTransaction = new DtTransactionDTO();
         debitTransaction.setVoucherNo(paymentVoucherDTO.getVoucherNo());
-        debitTransaction.setVoucherId(paymentVoucherDTO.getId());
         debitTransaction.setVoucherDate(paymentVoucherDTO.getVoucherDate());
         debitTransaction.setVoucherName("PAYMENT VOUCHER");
         debitTransaction.setBalanceType(BalanceType.DEBIT);

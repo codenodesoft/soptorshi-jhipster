@@ -16,12 +16,12 @@ export class NotificationInterceptor implements HttpInterceptor {
                         const arr = event.headers.keys();
                         let alert = null;
                         arr.forEach(entry => {
-                            // if (entry.toLowerCase().endsWith('app-alert')) {
-                            //     alert = event.headers.get(entry);
-                            // }
-                            if (entry.toLowerCase().endsWith('app-notification')) {
+                            if (entry.toLowerCase().endsWith('app-alert')) {
                                 alert = event.headers.get(entry);
                             }
+                            // if (entry.toLowerCase().endsWith('app-notification')) {
+                            //     alert = event.headers.get(entry);
+                            // }
                         });
                         if (alert) {
                             if (typeof alert === 'string') {
