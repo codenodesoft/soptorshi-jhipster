@@ -25,10 +25,13 @@ public class ProductDTO implements Serializable {
 
     private LocalDate modifiedOn;
 
-
     private Long productCategoryId;
 
     private String productCategoryName;
+
+    private Long accountId;
+
+    private String accountName;
 
     public Long getId() {
         return id;
@@ -102,6 +105,22 @@ public class ProductDTO implements Serializable {
         this.productCategoryName = productCategoryName;
     }
 
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -126,15 +145,17 @@ public class ProductDTO implements Serializable {
     @Override
     public String toString() {
         return "ProductDTO{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", countryOrOrigin='" + getCountryOrOrigin() + "'" +
-            ", status='" + getStatus() + "'" +
-            ", modifiedBy='" + getModifiedBy() + "'" +
-            ", modifiedOn='" + getModifiedOn() + "'" +
-            ", productCategory=" + getProductCategoryId() +
-            ", productCategory='" + getProductCategoryName() + "'" +
-            "}";
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", countryOrOrigin='" + countryOrOrigin + '\'' +
+            ", status=" + status +
+            ", modifiedBy='" + modifiedBy + '\'' +
+            ", modifiedOn=" + modifiedOn +
+            ", productCategoryId=" + productCategoryId +
+            ", productCategoryName='" + productCategoryName + '\'' +
+            ", accountId=" + accountId +
+            ", accountName='" + accountName + '\'' +
+            '}';
     }
 }

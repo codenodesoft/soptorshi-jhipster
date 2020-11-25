@@ -21,7 +21,7 @@ import org.soptorshi.domain.enumeration.ProductStatus;
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,6 +50,10 @@ public class Product implements Serializable {
     @JsonIgnoreProperties("products")
     private ProductCategory productCategory;
 
+    @ManyToOne
+    @JsonIgnoreProperties("products")
+    private MstAccount account;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -66,6 +70,19 @@ public class Product implements Serializable {
     public Product name(String name) {
         this.name = name;
         return this;
+    }
+
+    public MstAccount getAccount() {
+        return account;
+    }
+
+    public Product account(MstAccount account){
+        this.account = account;
+        return this;
+    }
+
+    public void setAccount(MstAccount account) {
+        this.account = account;
     }
 
     public void setName(String name) {

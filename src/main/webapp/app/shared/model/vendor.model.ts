@@ -14,6 +14,8 @@ export interface IVendor {
     address?: any;
     contactNumber?: string;
     remarks?: VendorRemarks;
+    accountId?: number;
+    accountName?: string;
 }
 
 export class Vendor implements IVendor {
@@ -23,6 +25,8 @@ export class Vendor implements IVendor {
         public description?: any,
         public address?: any,
         public contactNumber?: string,
-        public remarks?: VendorRemarks
+        public remarks?: VendorRemarks,
+        public accountId?: number,
+        public accountName?: string
     ) {}
 }

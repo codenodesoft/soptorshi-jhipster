@@ -17,6 +17,8 @@ export interface IProduct {
     modifiedOn?: Moment;
     productCategoryName?: string;
     productCategoryId?: number;
+    accountId?: number;
+    accountName?: string;
 }
 
 export class Product implements IProduct {
@@ -30,6 +32,8 @@ export class Product implements IProduct {
         public modifiedBy?: string,
         public modifiedOn?: Moment,
         public productCategoryName?: string,
-        public productCategoryId?: number
+        public productCategoryId?: number,
+        public accountId?: number,
+        public accountName?: string
     ) {}
 }

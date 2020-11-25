@@ -5,13 +5,15 @@ import { tap } from 'rxjs/operators';
 import { AuthServerProvider } from 'app/core/auth/auth-session.service';
 import { LoginModalService } from 'app/core/login/login-modal.service';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthExpiredInterceptor implements HttpInterceptor {
     constructor(
         private loginModalService: LoginModalService,
         private authServerProvider: AuthServerProvider,
-        private stateStorageService: StateStorageService
+        private stateStorageService: StateStorageService,
+        private router: Router
     ) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -33,7 +35,7 @@ export class AuthExpiredInterceptor implements HttpInterceptor {
                             }
 
                             this.authServerProvider.logout();
-                            this.loginModalService.open();
+                            this.router.navigate(['/login']);
                         }
                     }
                 }

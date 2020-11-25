@@ -102,6 +102,13 @@ public class VendorQueryService extends QueryService<Vendor> {
             if (criteria.getRemarks() != null) {
                 specification = specification.and(buildSpecification(criteria.getRemarks(), Vendor_.remarks));
             }
+            if(criteria.getAccountId()!=null){
+                specification = specification
+                    .and(buildSpecification(
+                        criteria.getAccountId(),
+                        root-> root.join(Vendor_.account, JoinType.LEFT).get(MstAccount_.id)
+                    ));
+            }
         }
         return specification;
     }

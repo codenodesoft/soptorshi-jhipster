@@ -31,6 +31,7 @@
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="accountName"><span>Account</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="countryOrOrigin"><span>Country Or Origin</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="status"><span>Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -44,6 +45,7 @@
             <tr *ngFor="let product of products ;trackBy: trackId">
                 <td><a [routerLink]="['/product', product.id, 'view' ]">{{product.id}}</a></td>
                 <td>{{product.name}}</td>
+                <td>{{product.accountName}}</td>
                 <td>{{product.description}}</td>
                 <td>{{product.countryOrOrigin}}</td>
                 <td>{{product.status}}</td>

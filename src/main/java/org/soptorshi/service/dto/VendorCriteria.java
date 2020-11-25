@@ -36,6 +36,17 @@ public class VendorCriteria implements Serializable {
 
     private VendorRemarksFilter remarks;
 
+    private LongFilter accountId;
+
+
+    public LongFilter getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(LongFilter accountId) {
+        this.accountId = accountId;
+    }
+
     public LongFilter getId() {
         return id;
     }

@@ -4,6 +4,7 @@ package org.soptorshi.domain;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.util.Objects;
@@ -19,7 +20,7 @@ import org.soptorshi.domain.enumeration.VendorRemarks;
 public class Vendor implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,6 +43,10 @@ public class Vendor implements Serializable {
     @Column(name = "remarks")
     private VendorRemarks remarks;
 
+    @ManyToOne
+    @JsonIgnoreProperties("products")
+    private MstAccount account;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -49,6 +54,19 @@ public class Vendor implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Vendor account(MstAccount account){
+        this.account = account;
+        return this;
+    }
+
+    public MstAccount getAccount() {
+        return account;
+    }
+
+    public void setAccount(MstAccount account) {
+        this.account = account;
     }
 
     public String getCompanyName() {

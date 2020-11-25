@@ -43,6 +43,16 @@ public class ProductCriteria implements Serializable {
 
     private LongFilter productCategoryId;
 
+    private LongFilter accountId;
+
+    public LongFilter getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(LongFilter accountId) {
+        this.accountId = accountId;
+    }
+
     public LongFilter getId() {
         return id;
     }

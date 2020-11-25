@@ -1,7 +1,7 @@
 <div>
     <h2 id="page-heading">
         <span>Vendors Extended</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-vendor" [routerLink]="['/', 'vendor', { outlets: { popup:  'add-new-popup'} }]">
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-vendor" [routerLink]="['/vendor/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span class="hidden-sm-down" >
             Create new Vendor
@@ -30,7 +30,9 @@
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <th jhiSortBy="companyName"><span>Company Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                <th jhiSortBy="accountName"><span>Account</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+
+                <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
                 <th jhiSortBy="contactNumber"><span>Contact Number</span> <fa-icon [icon]="'sort'"></fa-icon></th>
                 <th jhiSortBy="remarks"><span>Remarks</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -39,6 +41,7 @@
             <tbody>
             <tr *ngFor="let vendor of vendors ;trackBy: trackId">
                 <td>{{vendor.companyName}}</td>
+                <td>{{vendor.accountName}}</td>
                 <td>{{vendor.description}}</td>
                 <td>{{vendor.contactNumber}}</td>
                 <td>{{vendor.remarks}}</td>

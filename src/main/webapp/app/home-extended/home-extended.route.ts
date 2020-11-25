@@ -7,7 +7,7 @@ export const HOME_EXTENDED_ROUTE: Route = {
     path: '',
     component: HomeExtendedComponent,
     data: {
-        authorities: [],
+        authorities: ['ROLE_USER'],
         pageTitle: 'Welcome, to Soptorshi'
     },
     canActivate: [UserRouteAccessService]

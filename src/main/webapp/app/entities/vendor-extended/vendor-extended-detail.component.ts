@@ -9,4 +9,8 @@ import { VendorDetailComponent } from 'app/entities/vendor';
     selector: 'jhi-vendor-extended-detail',
     templateUrl: './vendor-extended-detail.component.html'
 })
-export class VendorExtendedDetailComponent extends VendorDetailComponent {}
+export class VendorExtendedDetailComponent extends VendorDetailComponent {
+    constructor(protected dataUtils: JhiDataUtils, protected activatedRoute: ActivatedRoute) {
+        super(dataUtils, activatedRoute);
+    }
+}

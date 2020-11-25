@@ -23,6 +23,9 @@ public class VendorDTO implements Serializable {
 
     private VendorRemarks remarks;
 
+    private Long accountId;
+
+    private String accountName;
 
     public Long getId() {
         return id;
@@ -72,6 +75,22 @@ public class VendorDTO implements Serializable {
         this.remarks = remarks;
     }
 
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -96,12 +115,14 @@ public class VendorDTO implements Serializable {
     @Override
     public String toString() {
         return "VendorDTO{" +
-            "id=" + getId() +
-            ", companyName='" + getCompanyName() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", address='" + getAddress() + "'" +
-            ", contactNumber='" + getContactNumber() + "'" +
-            ", remarks='" + getRemarks() + "'" +
-            "}";
+            "id=" + id +
+            ", companyName='" + companyName + '\'' +
+            ", description='" + description + '\'' +
+            ", address='" + address + '\'' +
+            ", contactNumber='" + contactNumber + '\'' +
+            ", remarks=" + remarks +
+            ", accountId=" + accountId +
+            ", accountName='" + accountName + '\'' +
+            '}';
     }
 }

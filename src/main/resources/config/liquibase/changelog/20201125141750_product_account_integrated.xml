@@ -1,0 +1,12 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="monju (generated)" id="1606313888634-1">
+        <addColumn tableName="product">
+            <column name="account_id" type="bigint"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="monju (generated)" id="1606313888634-2">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="product" constraintName="product_account_fk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="mst_account"/>
+    </changeSet>
+
+</databaseChangeLog>
