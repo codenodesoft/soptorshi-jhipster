@@ -1,6 +1,8 @@
 package org.soptorshi.service.extended;
 
 import org.soptorshi.domain.Employee;
+import org.soptorshi.domain.enumeration.RequisitionStatus;
+import org.soptorshi.mediator.RequisitionVoucherTransactionService;
 import org.soptorshi.repository.RequisitionRepository;
 import org.soptorshi.repository.extended.EmployeeExtendedRepository;
 import org.soptorshi.repository.search.RequisitionSearchRepository;
@@ -17,11 +19,13 @@ import javax.validation.ValidationException;
 @Service
 @Transactional
 public class RequisitionExtendedService extends RequisitionService {
-    EmployeeExtendedRepository employeeExtendedRepository;
+    private final EmployeeExtendedRepository employeeExtendedRepository;
+    private final RequisitionVoucherTransactionService requisitionVoucherTransactionService;
 
-    public RequisitionExtendedService(RequisitionRepository requisitionRepository, RequisitionMapper requisitionMapper, RequisitionSearchRepository requisitionSearchRepository, EmployeeExtendedRepository employeeExtendedRepository) {
+    public RequisitionExtendedService(RequisitionRepository requisitionRepository, RequisitionMapper requisitionMapper, RequisitionSearchRepository requisitionSearchRepository, EmployeeExtendedRepository employeeExtendedRepository, RequisitionVoucherTransactionService requisitionVoucherTransactionService) {
         super(requisitionRepository, requisitionMapper, requisitionSearchRepository);
         this.employeeExtendedRepository = employeeExtendedRepository;
+        this.requisitionVoucherTransactionService = requisitionVoucherTransactionService;
     }
 
     @Override
@@ -30,6 +34,9 @@ public class RequisitionExtendedService extends RequisitionService {
         requisitionDTO.setDepartmentId(employee.getDepartment().getId());
         requisitionDTO.setOfficeId(employee.getOffice().getId());
         requisitionDTO.setEmployeeId(employee.getId());
-        return super.save(requisitionDTO);
+        requisitionDTO = super.save(requisitionDTO);
+        if(requisitionDTO.getStatus().equals(RequisitionStatus.RECEIVED_BY_REQUISIONER))
+            requisitionVoucherTransactionService.createPaymentVoucher(requisitionDTO);
+        return requisitionDTO;
     }
 }

@@ -56,7 +56,8 @@ Generic styles
     padding: 1.5%;
     margin-top: 20px;
     border: none;
-    height: 96vh;
+    height: 93vh;
+    overflow-y: auto;
 }
 
 .error {
@@ -269,7 +270,7 @@ a:focus {
 }
 
 #sidebar {
-    min-height: 100vh;
+    height: 94vh;
     min-width: 210px;
     max-width: 210px;
     background: #343a40;

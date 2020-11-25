@@ -87,7 +87,7 @@ public class PaymentVoucherExtendedService extends PaymentVoucherService {
         updateTransactions(paymentVoucherDTO);
 
         paymentVoucherDTO = super.save(paymentVoucherDTO);
-        if(paymentVoucherDTO.getApplicationType()!=null)
+        if(paymentVoucherDTO.getApplicationType()!=null && paymentVoucherDTO.getId()==null)
             storeApplicationVoucherRelation(paymentVoucherDTO);
         return paymentVoucherDTO;
     }

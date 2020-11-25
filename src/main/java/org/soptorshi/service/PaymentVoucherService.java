@@ -47,7 +47,7 @@ public class PaymentVoucherService {
     public PaymentVoucherDTO save(PaymentVoucherDTO paymentVoucherDTO) {
         log.debug("Request to save PaymentVoucher : {}", paymentVoucherDTO);
         PaymentVoucher paymentVoucher = paymentVoucherMapper.toEntity(paymentVoucherDTO);
-        paymentVoucher = paymentVoucherRepository.save(paymentVoucher);
+        paymentVoucher = paymentVoucherRepository.saveAndFlush(paymentVoucher);
         PaymentVoucherDTO result = paymentVoucherMapper.toDto(paymentVoucher);
         paymentVoucherSearchRepository.save(paymentVoucher);
         return result;

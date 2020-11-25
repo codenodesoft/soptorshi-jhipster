@@ -9,4 +9,6 @@ public interface PurchaseOrderVoucherRelationExtendedRepository extends Purchase
     Boolean existsByVoucherNo(String voucherNo);
 
     List<PurchaseOrderVoucherRelation> findByVoucherNo(String voucherNo);
+
+    List<PurchaseOrderVoucherRelation> findByPurchaseOrder_Requisition_Id(Long requisitionId);
 }
