@@ -82,4 +82,10 @@ export class CommercialPiUpdateExtendedComponent extends CommercialPiUpdateCompo
             this.commercialProductInfos.push(data[i]);
         }
     }
+
+    generateReport() {
+        if (this.commercialPi.id) {
+            this.commercialPiService.generatePi(this.commercialPi.id);
+        }
+    }
 }

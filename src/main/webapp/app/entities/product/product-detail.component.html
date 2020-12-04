@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="product">
-            <h2><span>Product</span> {{product.name}}</h2>
+            <h2><span>Product</span> {{product.id}}</h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
@@ -21,14 +21,18 @@
                 <dd>
                     <span>{{product.status}}</span>
                 </dd>
-                <!--<dt><span>Modified By</span></dt>
+                <dt><span>Modified By</span></dt>
                 <dd>
                     <span>{{product.modifiedBy}}</span>
                 </dd>
                 <dt><span>Modified On</span></dt>
                 <dd>
                     <span>{{product.modifiedOn}}</span>
-                </dd>-->
+                </dd>
+                <dt><span>Scientific Name</span></dt>
+                <dd>
+                    <span>{{product.scientificName}}</span>
+                </dd>
                 <dt><span>Product Category</span></dt>
                 <dd>
                     <div *ngIf="product.productCategoryId">
@@ -47,11 +51,6 @@
                     [routerLink]="['/product', product.id, 'edit']"
                     class="btn btn-primary">
                 <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
-            </button>
-            <button type="button"
-                    [routerLink]="['/product-price', product.productId, 'product']"
-                    class="btn btn-secondary">
-                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Product Price</span>
             </button>
         </div>
     </div>

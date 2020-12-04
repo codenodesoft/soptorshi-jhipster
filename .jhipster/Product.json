@@ -1,5 +1,16 @@
 {
-    "name": "Product",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "productCategory",
+            "otherEntityRelationshipName": "product",
+            "relationshipName": "productCategory",
+            "otherEntityField": "name",
+            "otherEntityRelationshipNameUndefined": false
+        }
+    ],
     "fields": [
         {
             "fieldName": "name",
@@ -26,25 +37,18 @@
         {
             "fieldName": "modifiedOn",
             "fieldType": "LocalDate"
-        }
-    ],
-    "relationships": [
+        },
         {
-            "relationshipType": "many-to-one",
-            "otherEntityName": "productCategory",
-            "otherEntityRelationshipName": "product",
-            "relationshipName": "productCategory",
-            "otherEntityField": "name"
+            "fieldName": "scientificName",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20190628152321",
-    "entityTableName": "product",
     "dto": "mapstruct",
-    "pagination": "pager",
+    "searchEngine": "elasticsearch",
     "service": "serviceClass",
+    "entityTableName": "product",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*",
-    "searchEngine": "elasticsearch"
+    "pagination": "pager"
 }

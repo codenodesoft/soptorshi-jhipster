@@ -26,6 +26,7 @@ export interface IProduction {
     createdOn?: Moment;
     updatedBy?: string;
     updatedOn?: Moment;
+    wastage?: number;
     productCategoriesName?: string;
     productCategoriesId?: number;
     productsName?: string;
@@ -47,6 +48,7 @@ export class Production implements IProduction {
         public createdOn?: Moment,
         public updatedBy?: string,
         public updatedOn?: Moment,
+        public wastage?: number,
         public productCategoriesName?: string,
         public productCategoriesId?: number,
         public productsName?: string,

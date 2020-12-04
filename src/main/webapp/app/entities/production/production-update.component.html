@@ -9,30 +9,6 @@
                     <input type="text" class="form-control" id="id" name="id"
                         [(ngModel)]="production.id" readonly />
                 </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_requisitions">Requisitions</label>
-                    <select class="form-control" id="field_requisitions" name="requisitions" [(ngModel)]="production.requisitionsId" >
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="requisitionOption.id" *ngFor="let requisitionOption of requisitions; trackBy: trackRequisitionById">{{requisitionOption.requisitionNo}}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_productCategories">Product Categories</label>
-                    <select class="form-control" id="field_productCategories" name="productCategories" [(ngModel)]="production.productCategoriesId" required>
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="productCategoryOption.id" *ngFor="let productCategoryOption of productcategories; trackBy: trackProductCategoryById">{{productCategoryOption.name}}</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_products">Products</label>
-                    <select class="form-control" id="field_products" name="products" [(ngModel)]="production.productsId" required>
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="productOption.id" *ngFor="let productOption of products; trackBy: trackProductById">{{productOption.name}}</option>
-                    </select>
-                </div>
-
                 <div class="form-group">
                     <label class="form-control-label" for="field_weightStep">Weight Step</label>
                     <select class="form-control" name="weightStep" [(ngModel)]="production.weightStep" id="field_weightStep"  required>
@@ -93,7 +69,7 @@
                     <input type="text" class="form-control" name="remarks" id="field_remarks"
                         [(ngModel)]="production.remarks" />
                 </div>
-               <!-- <div class="form-group">
+                <div class="form-group">
                     <label class="form-control-label" for="field_createdBy">Created By</label>
                     <input type="text" class="form-control" name="createdBy" id="field_createdBy"
                         [(ngModel)]="production.createdBy" />
@@ -116,8 +92,34 @@
                         <input id="field_updatedOn" type="datetime-local" class="form-control" name="updatedOn" [(ngModel)]="updatedOn" placeholder="YYYY-MM-DD HH:mm"
                         />
                     </div>
-                </div>-->
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_wastage">Wastage</label>
+                    <input type="number" class="form-control" name="wastage" id="field_wastage"
+                        [(ngModel)]="production.wastage" />
+                </div>
 
+                <div class="form-group">
+                    <label class="form-control-label" for="field_productCategories">Product Categories</label>
+                    <select class="form-control" id="field_productCategories" name="productCategories" [(ngModel)]="production.productCategoriesId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="productCategoryOption.id" *ngFor="let productCategoryOption of productcategories; trackBy: trackProductCategoryById">{{productCategoryOption.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_products">Products</label>
+                    <select class="form-control" id="field_products" name="products" [(ngModel)]="production.productsId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="productOption.id" *ngFor="let productOption of products; trackBy: trackProductById">{{productOption.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_requisitions">Requisitions</label>
+                    <select class="form-control" id="field_requisitions" name="requisitions" [(ngModel)]="production.requisitionsId" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="requisitionOption.id" *ngFor="let requisitionOption of requisitions; trackBy: trackRequisitionById">{{requisitionOption.requisitionNo}}</option>
+                    </select>
+                </div>
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

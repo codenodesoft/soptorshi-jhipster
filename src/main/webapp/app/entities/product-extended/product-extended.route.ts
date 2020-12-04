@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
-import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
+import { Routes } from '@angular/router';
+import { JhiResolvePagingParams } from 'ng-jhipster';
 import { UserRouteAccessService } from 'app/core';
-import { Observable, of } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { Product } from 'app/shared/model/product.model';
-import { IProduct } from 'app/shared/model/product.model';
 import { ProductDeletePopupComponent, ProductResolve, ProductService } from 'app/entities/product';
 import { ProductExtendedComponent } from 'app/entities/product-extended/product-extended.component';
 import { ProductExtendedDetailComponent } from 'app/entities/product-extended/product-extended-detail.component';
@@ -15,11 +10,11 @@ import { ProductExtendedCategoryWiseComponent } from 'app/entities/product-exten
 
 @Injectable({ providedIn: 'root' })
 export class ProductExtendedResolve extends ProductResolve {
-    constructor(public service: ProductService) {
+    constructor(service: ProductService) {
         super(service);
     }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IProduct> {
+    /*resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IProduct> {
         const id = route.params['id'] ? route.params['id'] : null;
         const productCategoryId = route.params['productCategoryId'] ? route.params['productCategoryId'] : null;
         if (id) {
@@ -33,7 +28,7 @@ export class ProductExtendedResolve extends ProductResolve {
             return of(product);
         }
         return of(new Product());
-    }
+    }*/
 }
 
 export const productExtendedRoute: Routes = [

@@ -27,4 +27,6 @@ public interface CommercialBudgetExtendedRepository extends CommercialBudgetRepo
     List<CommercialBudget> getAllByTypeAndBudgetDateGreaterThanEqualAndBudgetDateLessThanEqual(CommercialOrderCategory commercialOrderCategory, LocalDate fromDate, LocalDate toDate);
 
     List<CommercialBudget> getAllByBudgetStatusAndBudgetDateGreaterThanEqualAndBudgetDateLessThanEqual(CommercialBudgetStatus commercialBudgetStatus, LocalDate fromDate, LocalDate toDate);
+
+    Optional<CommercialBudget> getByProformaNoEquals(String proformaNo);
 }

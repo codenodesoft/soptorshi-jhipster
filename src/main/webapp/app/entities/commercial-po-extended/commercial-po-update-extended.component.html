@@ -77,5 +77,11 @@
                 </button>
             </div>
         </form>
+
+        <!--<button type="button" style="float: right" [hidden]="!commercialPo.id"
+                class="btn btn-info btn-sm"
+                (click)="generateReport()" *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_COMMERCIAL_ADMIN', 'ROLE_COMMERCIAL_MANAGER']">
+            <fa-icon [icon]="'download'"></fa-icon>
+        </button>-->
     </div>
 </div>

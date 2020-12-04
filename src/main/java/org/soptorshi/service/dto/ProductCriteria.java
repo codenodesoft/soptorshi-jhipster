@@ -1,16 +1,13 @@
 package org.soptorshi.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
-import org.soptorshi.domain.enumeration.ProductStatus;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
-import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.LocalDateFilter;
+import org.soptorshi.domain.enumeration.ProductStatus;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the Product entity. This class is used in ProductResource to
@@ -40,6 +37,8 @@ public class ProductCriteria implements Serializable {
     private StringFilter modifiedBy;
 
     private LocalDateFilter modifiedOn;
+
+    private StringFilter scientificName;
 
     private LongFilter productCategoryId;
 
@@ -91,6 +90,14 @@ public class ProductCriteria implements Serializable {
         this.modifiedOn = modifiedOn;
     }
 
+    public StringFilter getScientificName() {
+        return scientificName;
+    }
+
+    public void setScientificName(StringFilter scientificName) {
+        this.scientificName = scientificName;
+    }
+
     public LongFilter getProductCategoryId() {
         return productCategoryId;
     }
@@ -116,6 +123,7 @@ public class ProductCriteria implements Serializable {
             Objects.equals(status, that.status) &&
             Objects.equals(modifiedBy, that.modifiedBy) &&
             Objects.equals(modifiedOn, that.modifiedOn) &&
+            Objects.equals(scientificName, that.scientificName) &&
             Objects.equals(productCategoryId, that.productCategoryId);
     }
 
@@ -128,6 +136,7 @@ public class ProductCriteria implements Serializable {
         status,
         modifiedBy,
         modifiedOn,
+        scientificName,
         productCategoryId
         );
     }
@@ -141,6 +150,7 @@ public class ProductCriteria implements Serializable {
                 (status != null ? "status=" + status + ", " : "") +
                 (modifiedBy != null ? "modifiedBy=" + modifiedBy + ", " : "") +
                 (modifiedOn != null ? "modifiedOn=" + modifiedOn + ", " : "") +
+                (scientificName != null ? "scientificName=" + scientificName + ", " : "") +
                 (productCategoryId != null ? "productCategoryId=" + productCategoryId + ", " : "") +
             "}";
     }

@@ -40,6 +40,7 @@
             <th jhiSortBy="createdOn"><span>Created On</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="updatedBy"><span>Updated By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="updatedOn"><span>Updated On</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="wastage"><span>Wastage</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="productCategoriesName"><span>Product Categories</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="productsName"><span>Products</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="requisitionsRequisitionNo"><span>Requisitions</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -59,6 +60,7 @@
                 <td>{{production.createdOn | date:'medium'}}</td>
                 <td>{{production.updatedBy}}</td>
                 <td>{{production.updatedOn | date:'medium'}}</td>
+                <td>{{production.wastage}}</td>
                 <td>
                     <div *ngIf="production.productCategoriesId">
                         <a [routerLink]="['../product-category', production.productCategoriesId , 'view' ]" >{{production.productCategoriesName}}</a>

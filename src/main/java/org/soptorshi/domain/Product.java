@@ -2,15 +2,13 @@ package org.soptorshi.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.soptorshi.domain.enumeration.ProductStatus;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
-
-import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
-
-import org.soptorshi.domain.enumeration.ProductStatus;
 
 /**
  * A Product.
@@ -21,7 +19,7 @@ import org.soptorshi.domain.enumeration.ProductStatus;
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,6 +43,9 @@ public class Product implements Serializable {
 
     @Column(name = "modified_on")
     private LocalDate modifiedOn;
+
+    @Column(name = "scientific_name")
+    private String scientificName;
 
     @ManyToOne
     @JsonIgnoreProperties("products")
@@ -137,6 +138,19 @@ public class Product implements Serializable {
         this.modifiedOn = modifiedOn;
     }
 
+    public String getScientificName() {
+        return scientificName;
+    }
+
+    public Product scientificName(String scientificName) {
+        this.scientificName = scientificName;
+        return this;
+    }
+
+    public void setScientificName(String scientificName) {
+        this.scientificName = scientificName;
+    }
+
     public ProductCategory getProductCategory() {
         return productCategory;
     }
@@ -181,6 +195,7 @@ public class Product implements Serializable {
             ", status='" + getStatus() + "'" +
             ", modifiedBy='" + getModifiedBy() + "'" +
             ", modifiedOn='" + getModifiedOn() + "'" +
+            ", scientificName='" + getScientificName() + "'" +
             "}";
     }
 }

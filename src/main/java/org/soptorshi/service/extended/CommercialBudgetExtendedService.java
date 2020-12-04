@@ -121,4 +121,8 @@ public class CommercialBudgetExtendedService extends CommercialBudgetService {
     List<CommercialBudget> getAll() {
         return commercialBudgetExtendedRepository.findAll();
     }
+
+    Optional<CommercialBudget> getByCommercialPi(String proformaNo) {
+        return commercialBudgetExtendedRepository.getByProformaNoEquals(proformaNo);
+    }
 }

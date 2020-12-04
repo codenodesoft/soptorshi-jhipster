@@ -75,7 +75,10 @@
                         </dd>
                         <dt><span>Manager</span></dt>
                         <dd>
-                            <span>{{employee.manager}}</span>
+                            <!--<span>{{employee.manager}}</span>-->
+                            <span *ngFor="let manager of managers">
+                                {{manager.employeeFullName}}
+                            </span>
                         </dd>
                         <dt><span>Employee Status</span></dt>
                         <dd>

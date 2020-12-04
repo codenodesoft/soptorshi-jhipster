@@ -1,5 +1,32 @@
 {
-    "name": "Production",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "productCategory",
+            "otherEntityRelationshipName": "production",
+            "relationshipName": "productCategories",
+            "otherEntityField": "name",
+            "otherEntityRelationshipNameUndefined": false
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "product",
+            "otherEntityRelationshipName": "production",
+            "relationshipName": "products",
+            "otherEntityField": "name",
+            "otherEntityRelationshipNameUndefined": false
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "requisition",
+            "otherEntityRelationshipName": "production",
+            "relationshipName": "requisitions",
+            "otherEntityField": "requisitionNo",
+            "otherEntityRelationshipNameUndefined": false
+        }
+    ],
     "fields": [
         {
             "fieldName": "weightStep",
@@ -51,38 +78,18 @@
         {
             "fieldName": "updatedOn",
             "fieldType": "Instant"
-        }
-    ],
-    "relationships": [
-        {
-            "relationshipType": "many-to-one",
-            "otherEntityName": "productCategory",
-            "otherEntityRelationshipName": "production",
-            "relationshipName": "productCategories",
-            "otherEntityField": "name"
         },
         {
-            "relationshipType": "many-to-one",
-            "otherEntityName": "product",
-            "otherEntityRelationshipName": "production",
-            "relationshipName": "products",
-            "otherEntityField": "name"
-        },
-        {
-            "relationshipType": "many-to-one",
-            "otherEntityName": "requisition",
-            "otherEntityRelationshipName": "production",
-            "relationshipName": "requisitions",
-            "otherEntityField": "requisitionNo"
+            "fieldName": "wastage",
+            "fieldType": "BigDecimal"
         }
     ],
     "changelogDate": "20200110195953",
-    "entityTableName": "production",
     "dto": "mapstruct",
-    "pagination": "infinite-scroll",
+    "searchEngine": "elasticsearch",
     "service": "serviceClass",
+    "entityTableName": "production",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "infinite-scroll"
 }

@@ -1,22 +1,20 @@
 package org.soptorshi.web.rest;
 
-import org.soptorshi.SoptorshiApp;
-
-import org.soptorshi.domain.Product;
-import org.soptorshi.domain.ProductCategory;
-import org.soptorshi.repository.ProductRepository;
-import org.soptorshi.repository.search.ProductSearchRepository;
-import org.soptorshi.service.ProductService;
-import org.soptorshi.service.dto.ProductDTO;
-import org.soptorshi.service.mapper.ProductMapper;
-import org.soptorshi.web.rest.errors.ExceptionTranslator;
-import org.soptorshi.service.dto.ProductCriteria;
-import org.soptorshi.service.ProductQueryService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.soptorshi.SoptorshiApp;
+import org.soptorshi.domain.Product;
+import org.soptorshi.domain.ProductCategory;
+import org.soptorshi.domain.enumeration.ProductStatus;
+import org.soptorshi.repository.ProductRepository;
+import org.soptorshi.repository.search.ProductSearchRepository;
+import org.soptorshi.service.ProductQueryService;
+import org.soptorshi.service.ProductService;
+import org.soptorshi.service.dto.ProductDTO;
+import org.soptorshi.service.mapper.ProductMapper;
+import org.soptorshi.web.rest.errors.ExceptionTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
@@ -28,7 +26,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
@@ -37,16 +34,13 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
-
-import static org.soptorshi.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
+import static org.soptorshi.web.rest.TestUtil.createFormattingConversionService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import org.soptorshi.domain.enumeration.ProductStatus;
 /**
  * Test class for the ProductResource REST controller.
  *
@@ -73,6 +67,9 @@ public class ProductResourceIntTest {
 
     private static final LocalDate DEFAULT_MODIFIED_ON = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_MODIFIED_ON = LocalDate.now(ZoneId.systemDefault());
+
+    private static final String DEFAULT_SCIENTIFIC_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_SCIENTIFIC_NAME = "BBBBBBBBBB";
 
     @Autowired
     private ProductRepository productRepository;
@@ -138,7 +135,8 @@ public class ProductResourceIntTest {
             .countryOrOrigin(DEFAULT_COUNTRY_OR_ORIGIN)
             .status(DEFAULT_STATUS)
             .modifiedBy(DEFAULT_MODIFIED_BY)
-            .modifiedOn(DEFAULT_MODIFIED_ON);
+            .modifiedOn(DEFAULT_MODIFIED_ON)
+            .scientificName(DEFAULT_SCIENTIFIC_NAME);
         return product;
     }
 
@@ -169,6 +167,7 @@ public class ProductResourceIntTest {
         assertThat(testProduct.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testProduct.getModifiedBy()).isEqualTo(DEFAULT_MODIFIED_BY);
         assertThat(testProduct.getModifiedOn()).isEqualTo(DEFAULT_MODIFIED_ON);
+        assertThat(testProduct.getScientificName()).isEqualTo(DEFAULT_SCIENTIFIC_NAME);
 
         // Validate the Product in Elasticsearch
         verify(mockProductSearchRepository, times(1)).save(testProduct);
@@ -213,9 +212,10 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.[*].countryOrOrigin").value(hasItem(DEFAULT_COUNTRY_OR_ORIGIN.toString())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].modifiedBy").value(hasItem(DEFAULT_MODIFIED_BY.toString())))
-            .andExpect(jsonPath("$.[*].modifiedOn").value(hasItem(DEFAULT_MODIFIED_ON.toString())));
+            .andExpect(jsonPath("$.[*].modifiedOn").value(hasItem(DEFAULT_MODIFIED_ON.toString())))
+            .andExpect(jsonPath("$.[*].scientificName").value(hasItem(DEFAULT_SCIENTIFIC_NAME.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getProduct() throws Exception {
@@ -232,7 +232,8 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.countryOrOrigin").value(DEFAULT_COUNTRY_OR_ORIGIN.toString()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.modifiedBy").value(DEFAULT_MODIFIED_BY.toString()))
-            .andExpect(jsonPath("$.modifiedOn").value(DEFAULT_MODIFIED_ON.toString()));
+            .andExpect(jsonPath("$.modifiedOn").value(DEFAULT_MODIFIED_ON.toString()))
+            .andExpect(jsonPath("$.scientificName").value(DEFAULT_SCIENTIFIC_NAME.toString()));
     }
 
     @Test
@@ -459,6 +460,45 @@ public class ProductResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllProductsByScientificNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where scientificName equals to DEFAULT_SCIENTIFIC_NAME
+        defaultProductShouldBeFound("scientificName.equals=" + DEFAULT_SCIENTIFIC_NAME);
+
+        // Get all the productList where scientificName equals to UPDATED_SCIENTIFIC_NAME
+        defaultProductShouldNotBeFound("scientificName.equals=" + UPDATED_SCIENTIFIC_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductsByScientificNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where scientificName in DEFAULT_SCIENTIFIC_NAME or UPDATED_SCIENTIFIC_NAME
+        defaultProductShouldBeFound("scientificName.in=" + DEFAULT_SCIENTIFIC_NAME + "," + UPDATED_SCIENTIFIC_NAME);
+
+        // Get all the productList where scientificName equals to UPDATED_SCIENTIFIC_NAME
+        defaultProductShouldNotBeFound("scientificName.in=" + UPDATED_SCIENTIFIC_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductsByScientificNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where scientificName is not null
+        defaultProductShouldBeFound("scientificName.specified=true");
+
+        // Get all the productList where scientificName is null
+        defaultProductShouldNotBeFound("scientificName.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllProductsByProductCategoryIsEqualToSomething() throws Exception {
         // Initialize the database
         ProductCategory productCategory = ProductCategoryResourceIntTest.createEntity(em);
@@ -488,7 +528,8 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.[*].countryOrOrigin").value(hasItem(DEFAULT_COUNTRY_OR_ORIGIN)))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].modifiedBy").value(hasItem(DEFAULT_MODIFIED_BY)))
-            .andExpect(jsonPath("$.[*].modifiedOn").value(hasItem(DEFAULT_MODIFIED_ON.toString())));
+            .andExpect(jsonPath("$.[*].modifiedOn").value(hasItem(DEFAULT_MODIFIED_ON.toString())))
+            .andExpect(jsonPath("$.[*].scientificName").value(hasItem(DEFAULT_SCIENTIFIC_NAME)));
 
         // Check, that the count call also returns 1
         restProductMockMvc.perform(get("/api/products/count?sort=id,desc&" + filter))
@@ -541,7 +582,8 @@ public class ProductResourceIntTest {
             .countryOrOrigin(UPDATED_COUNTRY_OR_ORIGIN)
             .status(UPDATED_STATUS)
             .modifiedBy(UPDATED_MODIFIED_BY)
-            .modifiedOn(UPDATED_MODIFIED_ON);
+            .modifiedOn(UPDATED_MODIFIED_ON)
+            .scientificName(UPDATED_SCIENTIFIC_NAME);
         ProductDTO productDTO = productMapper.toDto(updatedProduct);
 
         restProductMockMvc.perform(put("/api/products")
@@ -559,6 +601,7 @@ public class ProductResourceIntTest {
         assertThat(testProduct.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testProduct.getModifiedBy()).isEqualTo(UPDATED_MODIFIED_BY);
         assertThat(testProduct.getModifiedOn()).isEqualTo(UPDATED_MODIFIED_ON);
+        assertThat(testProduct.getScientificName()).isEqualTo(UPDATED_SCIENTIFIC_NAME);
 
         // Validate the Product in Elasticsearch
         verify(mockProductSearchRepository, times(1)).save(testProduct);
@@ -624,7 +667,8 @@ public class ProductResourceIntTest {
             .andExpect(jsonPath("$.[*].countryOrOrigin").value(hasItem(DEFAULT_COUNTRY_OR_ORIGIN)))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].modifiedBy").value(hasItem(DEFAULT_MODIFIED_BY)))
-            .andExpect(jsonPath("$.[*].modifiedOn").value(hasItem(DEFAULT_MODIFIED_ON.toString())));
+            .andExpect(jsonPath("$.[*].modifiedOn").value(hasItem(DEFAULT_MODIFIED_ON.toString())))
+            .andExpect(jsonPath("$.[*].scientificName").value(hasItem(DEFAULT_SCIENTIFIC_NAME)));
     }
 
     @Test

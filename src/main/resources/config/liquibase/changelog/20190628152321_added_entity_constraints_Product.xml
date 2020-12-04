@@ -7,7 +7,7 @@
         Added the constraints for entity Product.
     -->
     <changeSet id="20190628152321-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="product_category_id"
                                  baseTableName="product"
                                  constraintName="fk_product_product_category_id"

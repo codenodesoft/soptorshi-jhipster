@@ -34,8 +34,9 @@
             <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="countryOrOrigin"><span>Country Or Origin</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="status"><span>Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-       <!--     <th jhiSortBy="modifiedBy"><span>Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="modifiedOn"><span>Modified On</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+            <th jhiSortBy="modifiedBy"><span>Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="modifiedOn"><span>Modified On</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="scientificName"><span>Scientific Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="productCategoryName"><span>Product Category</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
@@ -47,8 +48,9 @@
                 <td>{{product.description}}</td>
                 <td>{{product.countryOrOrigin}}</td>
                 <td>{{product.status}}</td>
-                <!--<td>{{product.modifiedBy}}</td>
-                <td>{{product.modifiedOn | date:'mediumDate'}}</td>-->
+                <td>{{product.modifiedBy}}</td>
+                <td>{{product.modifiedOn | date:'mediumDate'}}</td>
+                <td>{{product.scientificName}}</td>
                 <td>
                     <div *ngIf="product.productCategoryId">
                         <a [routerLink]="['../product-category', product.productCategoryId , 'view' ]" >{{product.productCategoryName}}</a>

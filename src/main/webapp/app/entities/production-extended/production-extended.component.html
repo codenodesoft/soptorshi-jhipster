@@ -86,6 +86,7 @@
                     <th jhiSortBy="byProductQuantity"><span>By Product Quantity</span>
                         <fa-icon [icon]="'sort'"></fa-icon>
                     </th>
+                    <th jhiSortBy="wastage"><span>Wastage</span> <fa-icon [icon]="'sort'"></fa-icon></th>
                     <!--<th jhiSortBy="remarks"><span>Remarks</span>
                         <fa-icon [icon]="'sort'"></fa-icon>
                     </th>
@@ -128,6 +129,7 @@
                     <td>{{production.quantity}}</td>
                     <td>{{production.byProductDescription}}</td>
                     <td>{{production.byProductQuantity}}</td>
+                    <td>{{production.wastage}}</td>
                     <!--<td>{{production.remarks}}</td>
                     <td>{{production.createdBy}}</td>
                     <td>{{production.createdOn | date:'medium'}}</td>

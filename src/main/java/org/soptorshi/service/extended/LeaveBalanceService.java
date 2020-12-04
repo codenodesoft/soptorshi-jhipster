@@ -3,6 +3,7 @@ package org.soptorshi.service.extended;
 import org.soptorshi.domain.Employee;
 import org.soptorshi.domain.LeaveApplication;
 import org.soptorshi.domain.LeaveType;
+import org.soptorshi.domain.enumeration.EmploymentType;
 import org.soptorshi.domain.enumeration.LeaveStatus;
 import org.soptorshi.repository.EmployeeRepository;
 import org.soptorshi.repository.LeaveTypeRepository;
@@ -72,6 +73,9 @@ public class LeaveBalanceService {
 
         if (employee.isPresent()) {
 
+            boolean isPermanent = employee.get().getEmploymentType().equals(EmploymentType.PERMANENT);
+            int limit = 60;
+
             LocalDate currentDate = LocalDate.now();
             LocalDate queryDateFromQueryYear = LocalDate.of(queryYear, Month.JANUARY, 1); // 2015-01-01
             LocalDate joiningDate = employee.get().getJoiningDate();
@@ -89,7 +93,7 @@ public class LeaveBalanceService {
             } else {
                 LeaveBalanceDTO leaveBalanceDto = new LeaveBalanceDTO();
                 leaveBalanceDto.setEmployeeId(employeeId);
-                List<LeaveApplication> leaveApplications = getAppliedLeave(employee.get(), leaveType, queryDateFromQueryYear, lastDayOfQueryDateFromQueryYear);
+                List<LeaveApplication> leaveApplications = getAccetptedLeaves(employee.get(), leaveType, queryDateFromQueryYear, lastDayOfQueryDateFromQueryYear);
 
                 int numberOfDaysOfAlreadyTakenLeave = 0;
                 for(LeaveApplication leaveApplication: leaveApplications) {
@@ -104,6 +108,22 @@ public class LeaveBalanceService {
                         leaveBalanceDto.setTotalLeaveApplicableDays((remainingDaysOfTheJoiningYear * leaveType.getMaximumNumberOfDays()) / lengthOfTheJoiningYear);
                         leaveBalanceDto.setRemainingDays(
                             ((remainingDaysOfTheJoiningYear * leaveType.getMaximumNumberOfDays()) / lengthOfTheJoiningYear) - numberOfDaysOfAlreadyTakenLeave);
+
+                        // Temporary
+                        if(leaveType.getName().toLowerCase().contains("annual") && isPermanent) {
+                            int actualEarnedAnnualLeaves = (int) (diffBetweenLocalDateAndJoiningDate / 18);
+                            actualEarnedAnnualLeaves = actualEarnedAnnualLeaves - numberOfDaysOfAlreadyTakenLeave;
+                            int earnedAnnualLeaves = actualEarnedAnnualLeaves;
+                            if(actualEarnedAnnualLeaves > leaveType.getMaximumNumberOfDays()) {
+                                earnedAnnualLeaves = leaveType.getMaximumNumberOfDays();
+                            }
+                            leaveBalanceDto.setTotalLeaveApplicableDays(earnedAnnualLeaves);
+                            leaveBalanceDto.setRemainingDays(earnedAnnualLeaves);
+                        }
+                        else if (leaveType.getName().toLowerCase().contains("annual") && !isPermanent) {
+                            leaveBalanceDto.setTotalLeaveApplicableDays(0);
+                            leaveBalanceDto.setRemainingDays(0);
+                        }
                     } else {
                         if (leaveType.getName().toLowerCase().contains("earned")) {
                             int averageLengthOfAYear = 365;
@@ -120,8 +140,31 @@ public class LeaveBalanceService {
                             leaveBalanceDto.setRemainingDays(
                                 leaveType.getMaximumNumberOfDays() - numberOfDaysOfAlreadyTakenLeave);
                         }
+                        // Temporary
+                        if(leaveType.getName().toLowerCase().contains("annual") && isPermanent) {
+                            int actualEarnedAnnualLeaves = 0;
+                            if(diffBetweenLocalDateAndJoiningDate > leaveType.getMaximumNumberOfDays()) {
+                                actualEarnedAnnualLeaves = leaveType.getMaximumNumberOfDays();
+                            }
+                            else {
+                                actualEarnedAnnualLeaves = (int) diffBetweenLocalDateAndJoiningDate;
+                            }
+
+                            actualEarnedAnnualLeaves = actualEarnedAnnualLeaves - numberOfDaysOfAlreadyTakenLeave;
+                            int earnedAnnualLeaves = actualEarnedAnnualLeaves;
+                            if(actualEarnedAnnualLeaves > leaveType.getMaximumNumberOfDays()) {
+                                earnedAnnualLeaves = leaveType.getMaximumNumberOfDays();
+                            }
+                            leaveBalanceDto.setTotalLeaveApplicableDays(earnedAnnualLeaves);
+                            leaveBalanceDto.setRemainingDays(earnedAnnualLeaves);
+                        }
+                        else if (leaveType.getName().toLowerCase().contains("annual") && !isPermanent) {
+                            leaveBalanceDto.setTotalLeaveApplicableDays(0);
+                            leaveBalanceDto.setRemainingDays(0);
+                        }
                     }
                 }
+
                 leaveBalanceDto.setLeaveTypeId(leaveType.getId());
                 leaveBalanceDto.setLeaveTypeName(leaveType.getName());
 
@@ -141,8 +184,8 @@ public class LeaveBalanceService {
         return leaveTypeRepository.findAll();
     }
 
-    private List<LeaveApplication> getAppliedLeave(final Employee employee, final LeaveType leaveType,
-                                                   final LocalDate fromDate, final LocalDate toDate) {
+    private List<LeaveApplication> getAccetptedLeaves(final Employee employee, final LeaveType leaveType,
+                                                      final LocalDate fromDate, final LocalDate toDate) {
         return leaveApplicationExtendedRepository.
             findByEmployeesAndLeaveTypesAndStatusAndFromDateGreaterThanAndToDateLessThan(employee, leaveType, LeaveStatus.ACCEPTED, fromDate, toDate);
     }

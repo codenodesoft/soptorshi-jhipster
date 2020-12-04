@@ -5,7 +5,10 @@ import com.itextpdf.text.pdf.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soptorshi.domain.CommercialBudget;
+import org.soptorshi.domain.CommercialPi;
 import org.soptorshi.security.SecurityUtils;
+import org.soptorshi.service.dto.CommercialPiDTO;
+import org.soptorshi.service.dto.CommercialPoDTO;
 import org.soptorshi.service.dto.CommercialProductInfoDTO;
 import org.soptorshi.utils.SoptorshiUtils;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -110,7 +114,7 @@ public class CommercialReportService {
 
         int counter = 0;
 
-        for(CommercialBudget commercialBudget: commercialBudgets) {
+        for (CommercialBudget commercialBudget : commercialBudgets) {
             counter = counter + 1;
             pdfPCell = new PdfPCell(new Paragraph(counter + "", TIME_ROMAN_11));
             pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
@@ -136,11 +140,11 @@ public class CommercialReportService {
             List<CommercialProductInfoDTO> commercialProductInfoDTOs = commercialProductInfoExtendedService.getAllProductInfoByBudgetId(commercialBudget.getId());
 
             pdfPCell = new PdfPCell(new Paragraph("Company Name: " + commercialBudget.getCompanyName(), TIME_ROMAN_11));
-            pdfPCell.setRowspan(commercialProductInfoDTOs.size() + 3);
+            pdfPCell.setRowspan(1);
             pdfPCell.setColspan(5);
             pdfPTable.addCell(pdfPCell);
 
-            innerPdfPTable = new PdfPTable(9);
+            /*innerPdfPTable = new PdfPTable(9);
             innerPdfPTable.setWidthPercentage(100);
             innerPdfPTable.setTotalWidth(new float[]{11, 11, 11, 11, 11, 11, 11, 11, 12});
 
@@ -202,6 +206,11 @@ public class CommercialReportService {
 
             for(CommercialProductInfoDTO commercialProductInfoDTO: commercialProductInfoDTOs) {
 
+                pdfPCell = new PdfPCell();
+                pdfPCell.setRowspan(1);
+                pdfPCell.setColspan(5);
+                pdfPTable.addCell(pdfPCell);
+
                 innerPdfPCell = new PdfPCell(new Paragraph(commercialProductInfoDTO.getTaskNo().toString(), TIMES_BOLD_11));
                 innerPdfPCell.setHorizontalAlignment(Rectangle.ALIGN_CENTER);
                 innerPdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
@@ -241,10 +250,382 @@ public class CommercialReportService {
             }
 
             pdfPCell = new PdfPCell(innerPdfPTable);
-            pdfPTable.addCell(pdfPCell);
+            pdfPTable.addCell(pdfPCell);*/
         }
 
         document.add(pdfPTable);
+
+        document.close();
+        return new ByteArrayInputStream(baos.toByteArray());
+    }
+
+    public ByteArrayInputStream getCommercialPi(Long piNumber) throws DocumentException {
+        Document document = new Document();
+        document.setPageSize(PageSize.A4);
+        document.setMargins(20, 20, 40, 40);
+        document.addTitle("Commercial Budget");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = PdfWriter.getInstance(document, baos);
+        writer.setPageEvent(new headerAndFooter());
+        document.open();
+
+        Chunk chunk = null;
+        Paragraph paragraph = null;
+        PdfPTable pdfPTable = null;
+        PdfPTable innerPdfPTable = null;
+        PdfPCell pdfPCell = null;
+        PdfPCell innerPdfPCell = null;
+
+        paragraph = new Paragraph(new Chunk("Seven Oceans Fish Processing Ltd", SoptorshiUtils.mBigBoldFont));
+        paragraph.setAlignment(Element.ALIGN_CENTER);
+        document.add(paragraph);
+        document.add(Chunk.NEWLINE);
+
+        paragraph = new Paragraph(new Chunk("Commercial Proforma Invoice", TIMES_BOLD_11));
+        paragraph.setAlignment(Element.ALIGN_CENTER);
+        document.add(paragraph);
+
+        paragraph = new Paragraph();
+        lineBreak(paragraph, 1);
+        document.add(paragraph);
+
+        Optional<CommercialPiDTO> commercialPi = commercialPiExtendedService.findOne(piNumber);
+
+        if (commercialPi.isPresent()) {
+            Optional<CommercialBudget> commercialBudget = commercialBudgetExtendedService.getByCommercialPi(commercialPi.get().getProformaNo());
+
+            if (commercialBudget.isPresent()) {
+                List<CommercialProductInfoDTO> commercialProductInfoDTOs = commercialProductInfoExtendedService.getAllProductInfoByBudgetId(commercialBudget.get().getId());
+
+                pdfPTable = new PdfPTable(4);
+                pdfPTable.setWidthPercentage(100);
+                pdfPTable.setTotalWidth(new float[]{25, 25, 25, 25});
+
+                pdfPCell = new PdfPCell(new Paragraph("Proforma No: ", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getProformaNo(), TIME_ROMAN_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph("Proforma Date: ", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getProformaDate().format(DateTimeFormatter.ofPattern("dd MMMM, yyyy")), TIME_ROMAN_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+
+                pdfPCell = new PdfPCell(new Paragraph("Company Name: ", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getCompanyName(), TIME_ROMAN_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPCell.setColspan(3);
+                pdfPTable.addCell(pdfPCell);
+
+
+                pdfPCell = new PdfPCell(new Paragraph("Payment: ", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getPaymentTerm() + " (" + commercialPi.get().getPaymentType().toString() + ")", TIME_ROMAN_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPCell.setColspan(3);
+                pdfPTable.addCell(pdfPCell);
+
+
+                pdfPCell = new PdfPCell(new Paragraph("Shipment: ", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getShipmentDate(), TIME_ROMAN_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPCell.setColspan(3);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph("Port of Loading: ", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getPortOfLoading(), TIME_ROMAN_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph("Port of Destiantion: ", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getPortOfDestination(), TIME_ROMAN_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph("Harmonic Code: ", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getHarmonicCode(), TIME_ROMAN_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPCell.setBorder(0);
+                pdfPTable.addCell(pdfPCell);
+
+                document.add(pdfPTable);
+
+                paragraph = new Paragraph();
+                lineBreak(paragraph, 3);
+                document.add(paragraph);
+
+                pdfPTable = new PdfPTable(4);
+                pdfPTable.setWidthPercentage(100);
+                pdfPTable.setTotalWidth(new float[]{25, 25, 25, 25});
+
+
+                pdfPCell = new PdfPCell(new Paragraph("# ", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph("Product", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph("Quantity", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPTable.addCell(pdfPCell);
+
+                pdfPCell = new PdfPCell(new Paragraph("Price", TIMES_BOLD_11));
+                pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                pdfPTable.addCell(pdfPCell);
+
+                int counter = 0;
+
+                for (CommercialProductInfoDTO commercialProductInfoDTO : commercialProductInfoDTOs) {
+                    counter = counter + 1;
+                    pdfPCell = new PdfPCell(new Paragraph(counter + "", TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph(commercialProductInfoDTO.getProductsName(), TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph(commercialProductInfoDTO.getOfferedQuantity().toString(), TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph(commercialProductInfoDTO.getOfferedTotalPrice().toString(), TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPTable.addCell(pdfPCell);
+                }
+
+                document.add(pdfPTable);
+            }
+        }
+        document.close();
+        return new ByteArrayInputStream(baos.toByteArray());
+    }
+
+    public ByteArrayInputStream getCommercialPo(Long poNumber) throws DocumentException {
+        Document document = new Document();
+        document.setPageSize(PageSize.A4);
+        document.setMargins(20, 20, 40, 40);
+        document.addTitle("Commercial Budget");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = PdfWriter.getInstance(document, baos);
+        writer.setPageEvent(new headerAndFooter());
+        document.open();
+
+        Chunk chunk = null;
+        Paragraph paragraph = null;
+        PdfPTable pdfPTable = null;
+        PdfPTable innerPdfPTable = null;
+        PdfPCell pdfPCell = null;
+        PdfPCell innerPdfPCell = null;
+
+        paragraph = new Paragraph(new Chunk("Seven Oceans Fish Processing Ltd", SoptorshiUtils.mBigBoldFont));
+        paragraph.setAlignment(Element.ALIGN_CENTER);
+        document.add(paragraph);
+        document.add(Chunk.NEWLINE);
+
+        paragraph = new Paragraph(new Chunk("Commercial Purchase Order", TIMES_BOLD_11));
+        paragraph.setAlignment(Element.ALIGN_CENTER);
+        document.add(paragraph);
+
+        paragraph = new Paragraph();
+        lineBreak(paragraph, 1);
+        document.add(paragraph);
+
+        Optional<CommercialPoDTO> commercialPo = commercialPoExtendedService.findOne(poNumber);
+
+        if (commercialPo.isPresent()) {
+            Optional<CommercialPi> commercialPi = commercialPiExtendedService.getByCommercialPo(commercialPo.get().getCommercialPiProformaNo());
+
+            if (commercialPi.isPresent()) {
+                Optional<CommercialBudget> commercialBudget = commercialBudgetExtendedService.getByCommercialPi(commercialPi.get().getProformaNo());
+
+                if (commercialBudget.isPresent()) {
+                    List<CommercialProductInfoDTO> commercialProductInfoDTOs = commercialProductInfoExtendedService.getAllProductInfoByBudgetId(commercialBudget.get().getId());
+
+                    pdfPTable = new PdfPTable(4);
+                    pdfPTable.setWidthPercentage(100);
+                    pdfPTable.setTotalWidth(new float[]{25, 25, 25, 25});
+
+                    pdfPCell = new PdfPCell(new Paragraph("Purchase Order: ", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph(commercialPo.get().getPurchaseOrderNo(), TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph("Purchase Order Date: ", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph(commercialPo.get().getPurchaseOrderDate().format(DateTimeFormatter.ofPattern("dd MMMM, yyyy")), TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+
+                    pdfPCell = new PdfPCell(new Paragraph("Company Name: ", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getCompanyName(), TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPCell.setColspan(3);
+                    pdfPTable.addCell(pdfPCell);
+
+
+                    pdfPCell = new PdfPCell(new Paragraph("Payment: ", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getPaymentTerm() + " (" + commercialPi.get().getPaymentType().toString() + ")", TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPCell.setColspan(3);
+                    pdfPTable.addCell(pdfPCell);
+
+
+                    pdfPCell = new PdfPCell(new Paragraph("Shipment: ", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getShipmentDate(), TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPCell.setColspan(3);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph("Port of Loading: ", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getPortOfLoading(), TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph("Port of Destiantion: ", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getPortOfDestination(), TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph("Harmonic Code: ", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph(commercialPi.get().getHarmonicCode(), TIME_ROMAN_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPCell.setBorder(0);
+                    pdfPTable.addCell(pdfPCell);
+
+                    document.add(pdfPTable);
+
+                    paragraph = new Paragraph();
+                    lineBreak(paragraph, 3);
+                    document.add(paragraph);
+
+                    pdfPTable = new PdfPTable(4);
+                    pdfPTable.setWidthPercentage(100);
+                    pdfPTable.setTotalWidth(new float[]{25, 25, 25, 25});
+
+
+                    pdfPCell = new PdfPCell(new Paragraph("# ", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph("Product", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph("Quantity", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPTable.addCell(pdfPCell);
+
+                    pdfPCell = new PdfPCell(new Paragraph("Price", TIMES_BOLD_11));
+                    pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                    pdfPTable.addCell(pdfPCell);
+
+                    int counter = 0;
+
+                    for (CommercialProductInfoDTO commercialProductInfoDTO : commercialProductInfoDTOs) {
+                        counter = counter + 1;
+                        pdfPCell = new PdfPCell(new Paragraph(counter + "", TIME_ROMAN_11));
+                        pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                        pdfPTable.addCell(pdfPCell);
+
+                        pdfPCell = new PdfPCell(new Paragraph(commercialProductInfoDTO.getProductsName(), TIME_ROMAN_11));
+                        pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                        pdfPTable.addCell(pdfPCell);
+
+                        pdfPCell = new PdfPCell(new Paragraph(commercialProductInfoDTO.getOfferedQuantity().toString(), TIME_ROMAN_11));
+                        pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                        pdfPTable.addCell(pdfPCell);
+
+                        pdfPCell = new PdfPCell(new Paragraph(commercialProductInfoDTO.getOfferedTotalPrice().toString(), TIME_ROMAN_11));
+                        pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+                        pdfPTable.addCell(pdfPCell);
+                    }
+
+                    document.add(pdfPTable);
+
+                }
+            }
+        }
 
         document.close();
         return new ByteArrayInputStream(baos.toByteArray());
@@ -278,7 +659,7 @@ public class CommercialReportService {
     }
 
     void lineBreak(Paragraph p, int number) {
-        for(int i = 0; i < number; i++) {
+        for (int i = 0; i < number; i++) {
             p.add(new Paragraph(" "));
         }
     }

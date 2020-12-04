@@ -119,6 +119,9 @@ public class ProductionQueryService extends QueryService<Production> {
             if (criteria.getUpdatedOn() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getUpdatedOn(), Production_.updatedOn));
             }
+            if (criteria.getWastage() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getWastage(), Production_.wastage));
+            }
             if (criteria.getProductCategoriesId() != null) {
                 specification = specification.and(buildSpecification(criteria.getProductCategoriesId(),
                     root -> root.join(Production_.productCategories, JoinType.LEFT).get(ProductCategory_.id)));

@@ -1,9 +1,7 @@
 /* tslint:disable max-line-length */
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { of } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { ProductService } from 'app/entities/product/product.service';
@@ -25,7 +23,7 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new Product(0, 0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', ProductStatus.GOOD, 'AAAAAAA', currentDate);
+            elemDefault = new Product(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', ProductStatus.GOOD, 'AAAAAAA', currentDate, 'AAAAAAA');
         });
 
         describe('Service methods', async () => {
@@ -75,7 +73,8 @@ describe('Service Tests', () => {
                         countryOrOrigin: 'BBBBBB',
                         status: 'BBBBBB',
                         modifiedBy: 'BBBBBB',
-                        modifiedOn: currentDate.format(DATE_FORMAT)
+                        modifiedOn: currentDate.format(DATE_FORMAT),
+                        scientificName: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -102,7 +101,8 @@ describe('Service Tests', () => {
                         countryOrOrigin: 'BBBBBB',
                         status: 'BBBBBB',
                         modifiedBy: 'BBBBBB',
-                        modifiedOn: currentDate.format(DATE_FORMAT)
+                        modifiedOn: currentDate.format(DATE_FORMAT),
+                        scientificName: 'BBBBBB'
                     },
                     elemDefault
                 );

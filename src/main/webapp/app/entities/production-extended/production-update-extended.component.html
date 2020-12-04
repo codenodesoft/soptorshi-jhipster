@@ -130,6 +130,13 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label class="form-control-label" for="field_wastage">Wastage</label>
+                        <input type="number" class="form-control" name="wastage" id="field_wastage"
+                               [(ngModel)]="production.wastage"/>
+                    </div>
+                </div>
                 <div class="col-8">
                     <div class="form-group">
                         <label class="form-control-label" for="field_remarks">Remarks</label>
@@ -172,5 +179,14 @@
                 </button>
             </div>
         </form>
+
+        <div class="row">
+            <div class="col-12">
+                <button type="button" style="float: right" [hidden]="!production.id && production.weightStep != 'FREEZING'"
+                        class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Send to Inventory</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>

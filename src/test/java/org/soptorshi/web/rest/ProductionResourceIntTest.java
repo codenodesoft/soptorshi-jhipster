@@ -84,6 +84,9 @@ public class ProductionResourceIntTest {
     private static final Instant DEFAULT_UPDATED_ON = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_UPDATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final BigDecimal DEFAULT_WASTAGE = new BigDecimal(1);
+    private static final BigDecimal UPDATED_WASTAGE = new BigDecimal(2);
+
     @Autowired
     private ProductionRepository productionRepository;
 
@@ -152,7 +155,8 @@ public class ProductionResourceIntTest {
             .createdBy(DEFAULT_CREATED_BY)
             .createdOn(DEFAULT_CREATED_ON)
             .updatedBy(DEFAULT_UPDATED_BY)
-            .updatedOn(DEFAULT_UPDATED_ON);
+            .updatedOn(DEFAULT_UPDATED_ON)
+            .wastage(DEFAULT_WASTAGE);
         return production;
     }
 
@@ -187,6 +191,7 @@ public class ProductionResourceIntTest {
         assertThat(testProduction.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testProduction.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
         assertThat(testProduction.getUpdatedOn()).isEqualTo(DEFAULT_UPDATED_ON);
+        assertThat(testProduction.getWastage()).isEqualTo(DEFAULT_WASTAGE);
 
         // Validate the Production in Elasticsearch
         verify(mockProductionSearchRepository, times(1)).save(testProduction);
@@ -292,7 +297,8 @@ public class ProductionResourceIntTest {
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
             .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY.toString())))
-            .andExpect(jsonPath("$.[*].updatedOn").value(hasItem(DEFAULT_UPDATED_ON.toString())));
+            .andExpect(jsonPath("$.[*].updatedOn").value(hasItem(DEFAULT_UPDATED_ON.toString())))
+            .andExpect(jsonPath("$.[*].wastage").value(hasItem(DEFAULT_WASTAGE.intValue())));
     }
 
     @Test
@@ -315,7 +321,8 @@ public class ProductionResourceIntTest {
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()))
             .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
             .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY.toString()))
-            .andExpect(jsonPath("$.updatedOn").value(DEFAULT_UPDATED_ON.toString()));
+            .andExpect(jsonPath("$.updatedOn").value(DEFAULT_UPDATED_ON.toString()))
+            .andExpect(jsonPath("$.wastage").value(DEFAULT_WASTAGE.intValue()));
     }
 
     @Test
@@ -710,6 +717,45 @@ public class ProductionResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllProductionsByWastageIsEqualToSomething() throws Exception {
+        // Initialize the database
+        productionRepository.saveAndFlush(production);
+
+        // Get all the productionList where wastage equals to DEFAULT_WASTAGE
+        defaultProductionShouldBeFound("wastage.equals=" + DEFAULT_WASTAGE);
+
+        // Get all the productionList where wastage equals to UPDATED_WASTAGE
+        defaultProductionShouldNotBeFound("wastage.equals=" + UPDATED_WASTAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductionsByWastageIsInShouldWork() throws Exception {
+        // Initialize the database
+        productionRepository.saveAndFlush(production);
+
+        // Get all the productionList where wastage in DEFAULT_WASTAGE or UPDATED_WASTAGE
+        defaultProductionShouldBeFound("wastage.in=" + DEFAULT_WASTAGE + "," + UPDATED_WASTAGE);
+
+        // Get all the productionList where wastage equals to UPDATED_WASTAGE
+        defaultProductionShouldNotBeFound("wastage.in=" + UPDATED_WASTAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllProductionsByWastageIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        productionRepository.saveAndFlush(production);
+
+        // Get all the productionList where wastage is not null
+        defaultProductionShouldBeFound("wastage.specified=true");
+
+        // Get all the productionList where wastage is null
+        defaultProductionShouldNotBeFound("wastage.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllProductionsByProductCategoriesIsEqualToSomething() throws Exception {
         // Initialize the database
         ProductCategory productCategories = ProductCategoryResourceIntTest.createEntity(em);
@@ -781,7 +827,8 @@ public class ProductionResourceIntTest {
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
             .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)))
-            .andExpect(jsonPath("$.[*].updatedOn").value(hasItem(DEFAULT_UPDATED_ON.toString())));
+            .andExpect(jsonPath("$.[*].updatedOn").value(hasItem(DEFAULT_UPDATED_ON.toString())))
+            .andExpect(jsonPath("$.[*].wastage").value(hasItem(DEFAULT_WASTAGE.intValue())));
 
         // Check, that the count call also returns 1
         restProductionMockMvc.perform(get("/api/productions/count?sort=id,desc&" + filter))
@@ -838,7 +885,8 @@ public class ProductionResourceIntTest {
             .createdBy(UPDATED_CREATED_BY)
             .createdOn(UPDATED_CREATED_ON)
             .updatedBy(UPDATED_UPDATED_BY)
-            .updatedOn(UPDATED_UPDATED_ON);
+            .updatedOn(UPDATED_UPDATED_ON)
+            .wastage(UPDATED_WASTAGE);
         ProductionDTO productionDTO = productionMapper.toDto(updatedProduction);
 
         restProductionMockMvc.perform(put("/api/productions")
@@ -860,6 +908,7 @@ public class ProductionResourceIntTest {
         assertThat(testProduction.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testProduction.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
         assertThat(testProduction.getUpdatedOn()).isEqualTo(UPDATED_UPDATED_ON);
+        assertThat(testProduction.getWastage()).isEqualTo(UPDATED_WASTAGE);
 
         // Validate the Production in Elasticsearch
         verify(mockProductionSearchRepository, times(1)).save(testProduction);
@@ -929,7 +978,8 @@ public class ProductionResourceIntTest {
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
             .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)))
-            .andExpect(jsonPath("$.[*].updatedOn").value(hasItem(DEFAULT_UPDATED_ON.toString())));
+            .andExpect(jsonPath("$.[*].updatedOn").value(hasItem(DEFAULT_UPDATED_ON.toString())))
+            .andExpect(jsonPath("$.[*].wastage").value(hasItem(DEFAULT_WASTAGE.intValue())));
     }
 
     @Test

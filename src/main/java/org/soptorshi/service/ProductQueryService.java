@@ -1,26 +1,24 @@
 package org.soptorshi.service;
 
-import java.util.List;
-
-import javax.persistence.criteria.JoinType;
-
+import io.github.jhipster.service.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.soptorshi.domain.Product;
+import org.soptorshi.domain.ProductCategory_;
+import org.soptorshi.domain.Product_;
+import org.soptorshi.repository.ProductRepository;
+import org.soptorshi.repository.search.ProductSearchRepository;
+import org.soptorshi.service.dto.ProductCriteria;
+import org.soptorshi.service.dto.ProductDTO;
+import org.soptorshi.service.mapper.ProductMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
-import org.soptorshi.domain.Product;
-import org.soptorshi.domain.*; // for static metamodels
-import org.soptorshi.repository.ProductRepository;
-import org.soptorshi.repository.search.ProductSearchRepository;
-import org.soptorshi.service.dto.ProductCriteria;
-import org.soptorshi.service.dto.ProductDTO;
-import org.soptorshi.service.mapper.ProductMapper;
+import javax.persistence.criteria.JoinType;
+import java.util.List;
 
 /**
  * Service for executing complex queries for Product entities in the database.
@@ -107,6 +105,9 @@ public class ProductQueryService extends QueryService<Product> {
             }
             if (criteria.getModifiedOn() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getModifiedOn(), Product_.modifiedOn));
+            }
+            if (criteria.getScientificName() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getScientificName(), Product_.scientificName));
             }
             if (criteria.getProductCategoryId() != null) {
                 specification = specification.and(buildSpecification(criteria.getProductCategoryId(),

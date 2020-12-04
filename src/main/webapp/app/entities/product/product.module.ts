@@ -1,29 +1,29 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SoptorshiSharedModule } from 'app/shared';
 import {
     ProductComponent,
-    ProductDetailComponent,
-    ProductUpdateComponent,
-    ProductDeletePopupComponent,
     ProductDeleteDialogComponent,
+    ProductDeletePopupComponent,
+    ProductDetailComponent,
+    productPopupRoute,
     productRoute,
-    productPopupRoute
+    ProductUpdateComponent
 } from './';
 
 const ENTITY_STATES = [...productRoute, ...productPopupRoute];
 
 @NgModule({
     imports: [SoptorshiSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    /* declarations: [
+    declarations: [
         ProductComponent,
         ProductDetailComponent,
         ProductUpdateComponent,
         ProductDeleteDialogComponent,
         ProductDeletePopupComponent
     ],
-    entryComponents: [ProductComponent, ProductUpdateComponent, ProductDeleteDialogComponent, ProductDeletePopupComponent],*/
+    entryComponents: [ProductComponent, ProductUpdateComponent, ProductDeleteDialogComponent, ProductDeletePopupComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoptorshiProductModule {}

@@ -51,6 +51,8 @@ public class ProductionCriteria implements Serializable {
 
     private InstantFilter updatedOn;
 
+    private BigDecimalFilter wastage;
+
     private LongFilter productCategoriesId;
 
     private LongFilter productsId;
@@ -145,6 +147,14 @@ public class ProductionCriteria implements Serializable {
         this.updatedOn = updatedOn;
     }
 
+    public BigDecimalFilter getWastage() {
+        return wastage;
+    }
+
+    public void setWastage(BigDecimalFilter wastage) {
+        this.wastage = wastage;
+    }
+
     public LongFilter getProductCategoriesId() {
         return productCategoriesId;
     }
@@ -191,6 +201,7 @@ public class ProductionCriteria implements Serializable {
             Objects.equals(createdOn, that.createdOn) &&
             Objects.equals(updatedBy, that.updatedBy) &&
             Objects.equals(updatedOn, that.updatedOn) &&
+            Objects.equals(wastage, that.wastage) &&
             Objects.equals(productCategoriesId, that.productCategoriesId) &&
             Objects.equals(productsId, that.productsId) &&
             Objects.equals(requisitionsId, that.requisitionsId);
@@ -210,6 +221,7 @@ public class ProductionCriteria implements Serializable {
         createdOn,
         updatedBy,
         updatedOn,
+        wastage,
         productCategoriesId,
         productsId,
         requisitionsId
@@ -230,6 +242,7 @@ public class ProductionCriteria implements Serializable {
                 (createdOn != null ? "createdOn=" + createdOn + ", " : "") +
                 (updatedBy != null ? "updatedBy=" + updatedBy + ", " : "") +
                 (updatedOn != null ? "updatedOn=" + updatedOn + ", " : "") +
+                (wastage != null ? "wastage=" + wastage + ", " : "") +
                 (productCategoriesId != null ? "productCategoriesId=" + productCategoriesId + ", " : "") +
                 (productsId != null ? "productsId=" + productsId + ", " : "") +
                 (requisitionsId != null ? "requisitionsId=" + requisitionsId + ", " : "") +

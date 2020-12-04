@@ -62,6 +62,9 @@ public class Production implements Serializable {
     @Column(name = "updated_on")
     private Instant updatedOn;
 
+    @Column(name = "wastage", precision = 10, scale = 2)
+    private BigDecimal wastage;
+
     @ManyToOne
     @JsonIgnoreProperties("productions")
     private ProductCategory productCategories;
@@ -213,6 +216,19 @@ public class Production implements Serializable {
         this.updatedOn = updatedOn;
     }
 
+    public BigDecimal getWastage() {
+        return wastage;
+    }
+
+    public Production wastage(BigDecimal wastage) {
+        this.wastage = wastage;
+        return this;
+    }
+
+    public void setWastage(BigDecimal wastage) {
+        this.wastage = wastage;
+    }
+
     public ProductCategory getProductCategories() {
         return productCategories;
     }
@@ -287,6 +303,7 @@ public class Production implements Serializable {
             ", createdOn='" + getCreatedOn() + "'" +
             ", updatedBy='" + getUpdatedBy() + "'" +
             ", updatedOn='" + getUpdatedOn() + "'" +
+            ", wastage=" + getWastage() +
             "}";
     }
 }

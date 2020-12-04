@@ -9,8 +9,10 @@ import { IOffice } from 'app/shared/model/office.model';
 import { DepartmentService } from 'app/entities/department';
 import { DesignationService } from 'app/entities/designation';
 import { OfficeService } from 'app/entities/office';
-import { HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { EmployeeDetailComponent } from 'app/entities/employee';
+import { IManager } from 'app/shared/model/manager.model';
+import { ManagerService } from 'app/entities/manager';
 
 @Component({
     selector: 'jhi-employee-detail',
@@ -21,13 +23,15 @@ export class EmployeeExtendedDetailComponent extends EmployeeDetailComponent imp
     department: IDepartment;
     designation: IDesignation;
     office: IOffice;
+    managers: IManager[];
 
     constructor(
         protected dataUtils: JhiDataUtils,
         protected activatedRoute: ActivatedRoute,
         protected departmentService: DepartmentService,
         protected designationService: DesignationService,
-        protected officeService: OfficeService
+        protected officeService: OfficeService,
+        protected managerService: ManagerService
     ) {
         super(dataUtils, activatedRoute);
     }
@@ -35,6 +39,16 @@ export class EmployeeExtendedDetailComponent extends EmployeeDetailComponent imp
     ngOnInit() {
         this.activatedRoute.data.subscribe(({ employee }) => {
             this.employee = employee;
+            this.managerService
+                .query({
+                    'parentEmployeeId.equals': this.employee.id
+                })
+                .subscribe(
+                    (res: HttpResponse<IManager[]>) => {
+                        this.managers = res.body;
+                    },
+                    (res: HttpErrorResponse) => console.log(res.message)
+                );
         });
     }
 

@@ -60,6 +60,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="wastage" type="decimal(10,2)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="product_categories_id" type="bigint">
                 <constraints nullable="true" />
             </column>
@@ -79,4 +83,9 @@
 
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+    <changeSet author="kawsu (generated)" id="1606363533319-2">
+        <addColumn tableName="production">
+            <column name="wastage" type="decimal(10, 2)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

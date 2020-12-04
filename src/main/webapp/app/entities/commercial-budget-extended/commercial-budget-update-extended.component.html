@@ -286,7 +286,7 @@
             <button id="jh-create-entity"
                     [hidden]="commercialBudget.budgetStatus=='WAITING_FOR_APPROVAL' || commercialBudget.budgetStatus=='APPROVED' || commercialBudget.budgetStatus=='REJECTED'"
                     class="btn btn-primary jh-create-entity create-commercial-product-info"
-                    [routerLink]="['/commercial-product-info', commercialBudget.id ,'new']">
+                    [routerLink]="['/commercial-product-info/new']">
                 <fa-icon [icon]="'plus'"></fa-icon>
                 <span class="hidden-sm-down">
              Add Products

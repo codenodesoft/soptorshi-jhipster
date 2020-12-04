@@ -39,6 +39,8 @@ public class ProductionDTO implements Serializable {
 
     private Instant updatedOn;
 
+    private BigDecimal wastage;
+
 
     private Long productCategoriesId;
 
@@ -140,6 +142,14 @@ public class ProductionDTO implements Serializable {
         this.updatedOn = updatedOn;
     }
 
+    public BigDecimal getWastage() {
+        return wastage;
+    }
+
+    public void setWastage(BigDecimal wastage) {
+        this.wastage = wastage;
+    }
+
     public Long getProductCategoriesId() {
         return productCategoriesId;
     }
@@ -223,6 +233,7 @@ public class ProductionDTO implements Serializable {
             ", createdOn='" + getCreatedOn() + "'" +
             ", updatedBy='" + getUpdatedBy() + "'" +
             ", updatedOn='" + getUpdatedOn() + "'" +
+            ", wastage=" + getWastage() +
             ", productCategories=" + getProductCategoriesId() +
             ", productCategories='" + getProductCategoriesName() + "'" +
             ", products=" + getProductsId() +

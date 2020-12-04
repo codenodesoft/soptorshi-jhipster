@@ -8,13 +8,13 @@ export const enum ProductStatus {
 
 export interface IProduct {
     id?: number;
-    productId?: number;
     name?: string;
     description?: any;
     countryOrOrigin?: string;
     status?: ProductStatus;
     modifiedBy?: string;
     modifiedOn?: Moment;
+    scientificName?: string;
     productCategoryName?: string;
     productCategoryId?: number;
 }
@@ -22,13 +22,13 @@ export interface IProduct {
 export class Product implements IProduct {
     constructor(
         public id?: number,
-        public productId?: number,
         public name?: string,
         public description?: any,
         public countryOrOrigin?: string,
         public status?: ProductStatus,
         public modifiedBy?: string,
         public modifiedOn?: Moment,
+        public scientificName?: string,
         public productCategoryName?: string,
         public productCategoryId?: number
     ) {}

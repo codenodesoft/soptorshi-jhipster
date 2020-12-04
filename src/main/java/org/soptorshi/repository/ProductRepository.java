@@ -1,7 +1,8 @@
 package org.soptorshi.repository;
 
 import org.soptorshi.domain.Product;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 

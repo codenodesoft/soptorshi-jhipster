@@ -1,9 +1,11 @@
 package org.soptorshi.service.dto;
-import java.time.LocalDate;
-import java.io.Serializable;
-import java.util.Objects;
-import javax.persistence.Lob;
+
 import org.soptorshi.domain.enumeration.ProductStatus;
+
+import javax.persistence.Lob;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * A DTO for the Product entity.
@@ -24,6 +26,8 @@ public class ProductDTO implements Serializable {
     private String modifiedBy;
 
     private LocalDate modifiedOn;
+
+    private String scientificName;
 
 
     private Long productCategoryId;
@@ -86,6 +90,14 @@ public class ProductDTO implements Serializable {
         this.modifiedOn = modifiedOn;
     }
 
+    public String getScientificName() {
+        return scientificName;
+    }
+
+    public void setScientificName(String scientificName) {
+        this.scientificName = scientificName;
+    }
+
     public Long getProductCategoryId() {
         return productCategoryId;
     }
@@ -133,6 +145,7 @@ public class ProductDTO implements Serializable {
             ", status='" + getStatus() + "'" +
             ", modifiedBy='" + getModifiedBy() + "'" +
             ", modifiedOn='" + getModifiedOn() + "'" +
+            ", scientificName='" + getScientificName() + "'" +
             ", productCategory=" + getProductCategoryId() +
             ", productCategory='" + getProductCategoryName() + "'" +
             "}";

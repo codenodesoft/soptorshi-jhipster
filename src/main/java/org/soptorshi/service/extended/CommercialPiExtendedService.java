@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.soptorshi.domain.CommercialPi;
 import org.soptorshi.domain.enumeration.CommercialPaymentStatus;
 import org.soptorshi.domain.enumeration.CommercialPiStatus;
-import org.soptorshi.repository.CommercialPiRepository;
+import org.soptorshi.repository.extended.CommercialPiExtendedRepository;
 import org.soptorshi.repository.search.CommercialPiSearchRepository;
 import org.soptorshi.security.SecurityUtils;
 import org.soptorshi.service.CommercialPiService;
@@ -29,7 +29,7 @@ public class CommercialPiExtendedService extends CommercialPiService {
 
     private final Logger log = LoggerFactory.getLogger(CommercialPiExtendedService.class);
 
-    private final CommercialPiRepository commercialPiRepository;
+    private final CommercialPiExtendedRepository commercialPiRepository;
 
     private final CommercialPiMapper commercialPiMapper;
 
@@ -37,7 +37,7 @@ public class CommercialPiExtendedService extends CommercialPiService {
 
     private final CommercialPaymentInfoExtendedService commercialPaymentInfoExtendedService;
 
-    public CommercialPiExtendedService(CommercialPiRepository commercialPiRepository, CommercialPiMapper commercialPiMapper, CommercialPiSearchRepository commercialPiSearchRepository, CommercialPaymentInfoExtendedService commercialPaymentInfoExtendedService) {
+    public CommercialPiExtendedService(CommercialPiExtendedRepository commercialPiRepository, CommercialPiMapper commercialPiMapper, CommercialPiSearchRepository commercialPiSearchRepository, CommercialPaymentInfoExtendedService commercialPaymentInfoExtendedService) {
         super(commercialPiRepository, commercialPiMapper, commercialPiSearchRepository);
         this.commercialPiRepository = commercialPiRepository;
         this.commercialPiMapper = commercialPiMapper;
@@ -100,5 +100,9 @@ public class CommercialPiExtendedService extends CommercialPiService {
             }
         }
         return null;
+    }
+
+    public Optional<CommercialPi> getByCommercialPo(String commercialPo) {
+        return commercialPiRepository.getByPurchaseOrderNoEquals(commercialPo);
     }
 }

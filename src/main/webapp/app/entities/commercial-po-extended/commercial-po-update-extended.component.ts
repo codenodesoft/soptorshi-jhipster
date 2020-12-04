@@ -18,4 +18,10 @@ export class CommercialPoUpdateExtendedComponent extends CommercialPoUpdateCompo
     ) {
         super(jhiAlertService, commercialPoService, commercialPiService, activatedRoute);
     }
+
+    generateReport() {
+        if (this.commercialPo.id) {
+            this.commercialPoService.generatePo(this.commercialPo.id);
+        }
+    }
 }
