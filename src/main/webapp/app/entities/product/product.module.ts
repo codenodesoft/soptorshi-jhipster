@@ -16,14 +16,14 @@ const ENTITY_STATES = [...productRoute, ...productPopupRoute];
 
 @NgModule({
     imports: [SoptorshiSharedModule, RouterModule.forChild(ENTITY_STATES)],
-    declarations: [
+    /* declarations: [
         ProductComponent,
         ProductDetailComponent,
         ProductUpdateComponent,
         ProductDeleteDialogComponent,
         ProductDeletePopupComponent
     ],
-    entryComponents: [ProductComponent, ProductUpdateComponent, ProductDeleteDialogComponent, ProductDeletePopupComponent],
+    entryComponents: [ProductComponent, ProductUpdateComponent, ProductDeleteDialogComponent, ProductDeletePopupComponent],*/
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SoptorshiProductModule {}

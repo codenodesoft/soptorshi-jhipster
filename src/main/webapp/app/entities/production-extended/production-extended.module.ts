@@ -11,12 +11,24 @@ import {
     productionPopupExtendedRoute,
     ProductionUpdateExtendedComponent
 } from './';
+import {
+    ProductComponent,
+    ProductDeleteDialogComponent,
+    ProductDeletePopupComponent,
+    ProductDetailComponent,
+    ProductUpdateComponent
+} from 'app/entities/product';
 
 const ENTITY_STATES = [...productionExtendedRoute, ...productionPopupExtendedRoute];
 
 @NgModule({
     imports: [SoptorshiSharedModule, RouterModule.forChild(ENTITY_STATES)],
     declarations: [
+        ProductComponent,
+        ProductDetailComponent,
+        ProductUpdateComponent,
+        ProductDeleteDialogComponent,
+        ProductDeletePopupComponent,
         ProductionExtendedComponent,
         ProductionDetailExtendedComponent,
         ProductionUpdateExtendedComponent,
