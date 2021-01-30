@@ -17,6 +17,7 @@ export interface IProduct {
     scientificName?: string;
     productCategoryName?: string;
     productCategoryId?: number;
+    productId?: number;
 }
 
 export class Product implements IProduct {
@@ -30,6 +31,7 @@ export class Product implements IProduct {
         public modifiedOn?: Moment,
         public scientificName?: string,
         public productCategoryName?: string,
-        public productCategoryId?: number
+        public productCategoryId?: number,
+        public productId?: number
     ) {}
 }
