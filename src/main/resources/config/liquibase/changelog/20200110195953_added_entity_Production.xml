@@ -16,6 +16,7 @@
         Added the entity Production.
     -->
     <changeSet id="20200110195953-1" author="jhipster">
+        <validCheckSum>7:a8b77ff83f289578214d81a92744f144</validCheckSum>
         <createTable tableName="production">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>

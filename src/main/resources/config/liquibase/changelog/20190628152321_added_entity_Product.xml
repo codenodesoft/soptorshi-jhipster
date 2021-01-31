@@ -16,6 +16,7 @@
         Added the entity Product.
     -->
     <changeSet id="20190628152321-1" author="jhipster">
+        <validCheckSum>7:2c03bfdd85588825e1e78ac2cbb8ec29</validCheckSum>
         <createTable tableName="product">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
